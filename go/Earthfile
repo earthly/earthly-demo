@@ -1,0 +1,32 @@
+FROM golang:1.13-alpine3.11
+RUN apk --update --no-cache add git
+WORKDIR /demo
+
+all:
+    BUILD +docker
+    BUILD +lint
+
+deps:
+    RUN go get golang.org/x/lint/golint
+    COPY go.mod go.sum ./
+    RUN go mod download
+    SAVE IMAGE
+
+code:
+    FROM +deps
+    COPY main.go ./
+    SAVE IMAGE
+
+build:
+    FROM +code
+    RUN go build -o demo .
+    SAVE ARTIFACT demo AS LOCAL build/demo
+
+lint:
+    FROM +code
+    RUN golint -set_exit_status ./...
+
+docker:
+    COPY +build/demo .
+    ENTRYPOINT ["/demo/demo"]
+    SAVE IMAGE go-example:latest
