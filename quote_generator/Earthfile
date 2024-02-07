@@ -1,9 +1,11 @@
 VERSION 0.8
 FROM alpine:3.17.2
+RUN apk add --no-cache jq
 WORKDIR /quotes
 
 artifact:
-  COPY in.txt ./quotes.txt
+  COPY quotes.json ./
+  RUN cat ./quotes.json | jq -r ".quotes | .[].quote" > quotes.txt
   RUN echo Generated quotes:
   RUN cat quotes.txt
   SAVE ARTIFACT quotes.txt
