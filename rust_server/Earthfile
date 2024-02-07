@@ -1,0 +1,39 @@
+VERSION 0.8
+PROJECT earthly-sa/earthly-vs-gha
+
+IMPORT github.com/earthly/lib/rust AS rust
+FROM rust:1.73.0-bookworm
+
+install:
+  WORKDIR /rust-server
+  DO rust+INIT
+
+source:
+  FROM +install
+  COPY --keep-ts Cargo.toml Cargo.lock Rocket.toml quotes.txt .
+  COPY --keep-ts --dir src .
+
+test:
+  FROM +source
+  DO rust+CARGO --args="test"
+
+build:
+  FROM +source
+  DO rust+CARGO --args="build --release --bin quote_server" --output="release/[^/\.]+"
+  SAVE ARTIFACT target/release/quote_server quote_server AS LOCAL artifact/target
+
+docker:
+  ARG tag=latest
+  COPY +build/quote_server quote_server
+  # We also have to copy Rocket.toml so that Rocket binds to the correct address and port within the container.
+  COPY Rocket.toml Rocket.toml
+  COPY ../quote_generator+artifact/quotes.txt quotes.txt
+  EXPOSE 80
+  ENTRYPOINT ["./quote_server"]
+  SAVE IMAGE --push idelvall/earthly-demo-rs:$tag
+
+deploy:
+  ARG tag=latest
+  BUILD ../infra+deploy --image=idelvall/earthly-demo-rust --tag=$tag --port=80
+  RUN echo "https://earthly-demo-rust.fly.dev">service
+  SAVE ARTIFACT service service

@@ -1,0 +1,27 @@
+version: "3"
+services:
+  react:
+    #platform: linux/amd64
+    image: earthly-demo-react:latest
+    ports:
+      - 3001:80
+  rust:
+    #platform: linux/amd64
+    image: earthly-demo-rust:latest
+    ports:
+      - 8000:80
+  go:
+    #platform: linux/amd64
+    image: earthly-demo-go:latest
+    ports:
+      - 8001:80
+  python:
+    #platform: linux/amd64
+    image: earthly-demo-python:latest
+    ports:
+      - 8002:80
+  node:
+    #platform: linux/amd64
+    image: earthly-demo-node:latest
+    ports:
+      - 8003:80

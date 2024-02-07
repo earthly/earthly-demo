@@ -1,0 +1,33 @@
+VERSION 0.8
+PROJECT earthly-sa/earthly-vs-gha
+
+FROM node:19-alpine3.16
+WORKDIR /node-server
+
+deps:
+  COPY package.json ./ 
+  RUN npm install
+
+build:
+  FROM +deps 
+  COPY src src 
+  # Overwrite quotes
+  COPY ../quote_generator+artifact/quotes.txt quotes.txt
+
+test:
+  FROM +build
+  RUN npm test
+
+docker:
+  ARG tag=latest
+  FROM +build 
+  EXPOSE 80
+  ENTRYPOINT ["node", "src/index.js"]
+  SAVE IMAGE --push idelvall/earthly-demo-node:$tag
+
+deploy:
+  ARG tag=latest
+  BUILD ../infra+deploy --image=idelvall/earthly-demo-node --tag=$tag --port=80
+  RUN echo "https://earthly-demo-node.fly.dev">service
+  SAVE ARTIFACT service service
+

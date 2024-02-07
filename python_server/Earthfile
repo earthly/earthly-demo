@@ -1,0 +1,50 @@
+VERSION 0.8
+PROJECT earthly-sa/earthly-vs-gha
+
+FROM python:3 
+WORKDIR /py 
+
+deps:
+  RUN pip install wheel 
+  COPY requirements.txt ./ 
+  RUN pip wheel -r requirements.txt --wheel-dir=wheels
+
+
+build:
+  FROM +deps 
+  COPY src src 
+  #COPY quotes.txt ./
+  COPY ../quote_generator+artifact/quotes.txt quotes.txt
+  SAVE ARTIFACT src /src 
+  SAVE ARTIFACT wheels /wheels 
+  SAVE ARTIFACT quotes.txt ./
+
+
+test:
+  COPY +build/src src 
+  COPY +build/wheels wheels 
+  COPY +build/quotes.txt quotes.txt
+  COPY ../quote_generator+artifact/quotes.txt quotes.txt
+  COPY requirements.txt ./
+  RUN pip install --no-index --find-links=wheels -r requirements.txt 
+  RUN python src/test_quotes.py 
+
+
+docker:
+  ARG tag=latest
+  COPY +build/src src 
+  COPY +build/wheels wheels 
+  # quotes.txt needs to go into src for gunicorn to pick it up
+  COPY +build/quotes.txt src/quotes.txt
+  COPY start.sh ./
+  COPY requirements.txt ./
+  RUN pip install --no-index --find-links=wheels -r requirements.txt 
+  EXPOSE 80
+  ENTRYPOINT ["./start.sh" ]
+  SAVE IMAGE --push idelvall/earthly-demo-python:$tag
+
+deploy:
+  ARG tag=latest
+  BUILD ../infra+deploy --image=idelvall/earthly-demo-python --tag=$tag --port=80
+  RUN echo "https://earthly-demo-python.fly.dev">service
+  SAVE ARTIFACT service service
