@@ -20,12 +20,11 @@ test:
 build:
   FROM +source
   DO rust+CARGO --args="build --release --bin quote_server" --output="release/[^/\.]+"
-  SAVE ARTIFACT target/release/quote_server quote_server AS LOCAL artifact/target
+  SAVE ARTIFACT target/release/quote_server AS LOCAL target/
 
 docker:
   ARG tag=latest
   COPY +build/quote_server quote_server
-  # We also have to copy Rocket.toml so that Rocket binds to the correct address and port within the container.
   COPY Rocket.toml Rocket.toml
   COPY ../quote_generator+artifact/quotes.txt quotes.txt
   EXPOSE 80
@@ -36,4 +35,4 @@ deploy:
   ARG tag=latest
   BUILD ../infra+deploy --image=idelvall/earthly-demo-rust --tag=$tag --port=80
   RUN echo "https://earthly-demo-rust.fly.dev">service
-  SAVE ARTIFACT service service
+  SAVE ARTIFACT service

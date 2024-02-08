@@ -1,18 +1,18 @@
 VERSION 0.8
 
 all-test:
-  BUILD ./rust_server/+test
-  BUILD ./go_server/+test
-  BUILD ./python_server/+test
-  BUILD ./node_server/+test
-  BUILD ./quote_client/+test
+  BUILD ./rust_server+test
+  BUILD ./go_server+test
+  BUILD ./python_server+test
+  BUILD ./node_server+test
+  BUILD ./quote_client+test
 
 build-services:
   ARG tag=latest
-  BUILD ./rust_server/+docker --tag=$tag
-  BUILD ./go_server/+docker --tag=$tag
-  BUILD ./node_server/+docker --tag=$tag
-  BUILD ./python_server/+docker --tag=$tag
+  BUILD ./rust_server+docker --tag=$tag
+  BUILD ./go_server+docker --tag=$tag
+  BUILD ./node_server+docker --tag=$tag
+  BUILD ./python_server+docker --tag=$tag
 
 dev-up:
   LOCALLY

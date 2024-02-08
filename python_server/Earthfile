@@ -13,7 +13,6 @@ deps:
 build:
   FROM +deps 
   COPY src src 
-  #COPY quotes.txt ./
   COPY ../quote_generator+artifact/quotes.txt quotes.txt
   SAVE ARTIFACT src /src 
   SAVE ARTIFACT wheels /wheels 
@@ -34,7 +33,6 @@ docker:
   ARG tag=latest
   COPY +build/src src 
   COPY +build/wheels wheels 
-  # quotes.txt needs to go into src for gunicorn to pick it up
   COPY +build/quotes.txt src/quotes.txt
   COPY start.sh ./
   COPY requirements.txt ./
@@ -47,4 +45,4 @@ deploy:
   ARG tag=latest
   BUILD ../infra+deploy --image=idelvall/earthly-demo-python --tag=$tag --port=80
   RUN echo "https://earthly-demo-python.fly.dev">service
-  SAVE ARTIFACT service service
+  SAVE ARTIFACT service
