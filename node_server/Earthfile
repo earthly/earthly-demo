@@ -29,4 +29,3 @@ deploy:
   BUILD ../infra+deploy --image=idelvall/earthly-demo-node --tag=$tag --port=80
   RUN echo "https://earthly-demo-node.fly.dev">service
   SAVE ARTIFACT service service
-
