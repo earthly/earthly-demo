@@ -1,5 +1,5 @@
 VERSION 0.8
-PROJECT earthly-sa/earthly-vs-gha
+PROJECT earthly-technologies/earthly-demo
 
 IMPORT github.com/earthly/lib/rust AS rust
 FROM rust:1.73.0-bookworm

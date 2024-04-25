@@ -1,5 +1,5 @@
 VERSION 0.8
-PROJECT earthly-sa/earthly-vs-gha
+PROJECT earthly-technologies/earthly-demo
 
 FROM python:3 
 WORKDIR /py 

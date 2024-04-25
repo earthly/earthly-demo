@@ -1,5 +1,5 @@
 VERSION 0.8
-PROJECT earthly-sa/earthly-vs-gha
+PROJECT earthly-technologies/earthly-demo
 
 FROM golang:1.19.5-alpine3.17
 WORKDIR /go-server
