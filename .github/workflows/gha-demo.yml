@@ -9,7 +9,7 @@ on:
       - "gha-demo"
 jobs:
   gha-satellites-build:
-    runs-on: [earthly-satellite#vlad-gha-demo]
+    runs-on: [earthly-satellite#vlad-gha-demo-sh]
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
