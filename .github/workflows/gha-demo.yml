@@ -1,4 +1,4 @@
-name: GH-Actions-Satellites
+name: GH-Actions-Satellites-Demo
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     branches:
       - "gha-demo"
 jobs:
-  satellites-build:
+  gha-satellites-build:
     runs-on: [earthly-satellite#vlad-gha-demo]
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
