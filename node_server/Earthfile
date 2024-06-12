@@ -22,7 +22,6 @@ docker:
   FROM +build 
   EXPOSE 80
   ENTRYPOINT ["node", "src/index.js"]
-  RUN echo "FAILURE foo bar"; exit 1
   SAVE IMAGE --push idelvall/earthly-demo-node:$tag
 
 deploy:
