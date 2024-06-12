@@ -21,5 +21,3 @@ jobs:
         run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
       - name: Run CI pipeline
         run: "earthly --ci ./node_server+docker"
-      - name: Fail
-        run: "echo GHA FAILURE foo bar; exit 1"
