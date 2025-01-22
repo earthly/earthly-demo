@@ -3,10 +3,10 @@ name: GH-Actions-Only
 on:
   push:
     branches:
-      - "main"
+      - "*"
   pull_request:
     branches:
-      - "main"
+      - "*"
 env:
   CARGO_TERM_COLOR: always
 jobs:
