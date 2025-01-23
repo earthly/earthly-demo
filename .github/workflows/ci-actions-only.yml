@@ -19,6 +19,7 @@ jobs:
       - name: Go Service Build
         working-directory: go_server
         run: |
+          env
           go mod download
           go build -o go-server
           ls
